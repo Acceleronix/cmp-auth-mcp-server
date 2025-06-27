@@ -45,11 +45,17 @@ app.get("/authorize", async (c) => {
 	];
 
 	if (isLoggedIn) {
-		const content = await renderLoggedInAuthorizeScreen(oauthScopes, oauthReqInfo);
+		const content = await renderLoggedInAuthorizeScreen(
+			oauthScopes,
+			oauthReqInfo,
+		);
 		return c.html(layout(content, "MCP Remote Auth Demo - Authorization"));
 	}
 
-	const content = await renderLoggedOutAuthorizeScreen(oauthScopes, oauthReqInfo);
+	const content = await renderLoggedOutAuthorizeScreen(
+		oauthScopes,
+		oauthReqInfo,
+	);
 	return c.html(layout(content, "MCP Remote Auth Demo - Authorization"));
 });
 

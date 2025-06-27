@@ -9,7 +9,10 @@ import { env } from "cloudflare:workers";
 // to remove clutter and noise from the auth logic. You likely do not need
 // anything from this file.
 
-export const layout = (content: HtmlEscapedString | string, title: string) => html`
+export const layout = (
+	content: HtmlEscapedString | string,
+	title: string,
+) => html`
 	<!DOCTYPE html>
 	<html lang="en">
 		<head>
@@ -380,11 +383,19 @@ export const renderApproveContent = async (
 	`;
 };
 
-export const renderAuthorizationApprovedContent = async (redirectUrl: string) => {
-	return renderApproveContent("Authorization approved!", "success", redirectUrl);
+export const renderAuthorizationApprovedContent = async (
+	redirectUrl: string,
+) => {
+	return renderApproveContent(
+		"Authorization approved!",
+		"success",
+		redirectUrl,
+	);
 };
 
-export const renderAuthorizationRejectedContent = async (redirectUrl: string) => {
+export const renderAuthorizationRejectedContent = async (
+	redirectUrl: string,
+) => {
 	return renderApproveContent("Authorization rejected.", "error", redirectUrl);
 };
 
