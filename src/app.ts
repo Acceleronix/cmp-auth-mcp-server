@@ -71,6 +71,23 @@ app.post("/approve", async (c) => {
 		return c.html("INVALID LOGIN", 401);
 	}
 
+	// Handle rejection
+	if (action === "reject") {
+		const redirectUri = oauthReqInfo.redirect_uri;
+		const errorRedirect = `${redirectUri}?error=access_denied&error_description=User+denied+authorization`;
+		
+		if (redirectUri && (redirectUri.includes('claude.ai') || redirectUri.includes('mcp'))) {
+			return c.redirect(errorRedirect, 302);
+		}
+		
+		return c.html(
+			layout(
+				await renderAuthorizationRejectedContent("/"),
+				"CMP MCP Server - Authorization Status",
+			),
+		);
+	}
+
 	// If the user needs to both login and approve, we should validate the login first
 	if (action === "login_approve") {
 		// We'll allow any values for email and password for this demo
@@ -82,7 +99,7 @@ app.post("/approve", async (c) => {
 			return c.html(
 				layout(
 					await renderAuthorizationRejectedContent("/"),
-					"MCP Remote Auth Demo - Authorization Status",
+					"CMP MCP Server - Authorization Status",
 				),
 			);
 		}
@@ -92,20 +109,27 @@ app.post("/approve", async (c) => {
 	// can complete the authorization request
 	const { redirectTo } = await c.env.OAUTH_PROVIDER.completeAuthorization({
 		request: oauthReqInfo,
-		userId: email,
+		userId: email || "user@example.com",
 		metadata: {
-			label: "Test User",
+			label: "CMP MCP User",
 		},
 		scope: oauthReqInfo.scope,
 		props: {
-			userEmail: email,
+			userEmail: email || "user@example.com",
 		},
 	});
+
+	// For MCP clients like Claude, we should redirect immediately instead of showing a page
+	// Check if this is a programmatic client (like Claude) by checking the redirect URI
+	const redirectUri = oauthReqInfo.redirect_uri;
+	if (redirectUri && (redirectUri.includes('claude.ai') || redirectUri.includes('mcp'))) {
+		return c.redirect(redirectTo, 302);
+	}
 
 	return c.html(
 		layout(
 			await renderAuthorizationApprovedContent(redirectTo),
-			"MCP Remote Auth Demo - Authorization Status",
+			"CMP MCP Server - Authorization Status",
 		),
 	);
 });
