@@ -12,14 +12,6 @@
 		{
 			"new_sqlite_classes": ["MyMCP"],
 			"tag": "v1"
-		},
-		{
-			"deleted_classes": ["IoTSwaggerMCP"],
-			"tag": "v2"
-		},
-		{
-			"new_sqlite_classes": ["MyMCP"],
-			"tag": "v3"
 		}
 	],
 	"durable_objects": {
