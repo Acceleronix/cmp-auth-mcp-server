@@ -4,7 +4,7 @@
  */
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "cmp-oauth-mcp-server",
+	"name": "cmp-auth-mcp-server",
 	"main": "src/index.ts",
 	"compatibility_date": "2025-03-10",
 	"compatibility_flags": ["nodejs_compat"],
@@ -12,6 +12,14 @@
 		{
 			"new_sqlite_classes": ["MyMCP"],
 			"tag": "v1"
+		},
+		{
+			"deleted_classes": ["IoTSwaggerMCP"],
+			"tag": "v2"
+		},
+		{
+			"new_sqlite_classes": ["MyMCP"],
+			"tag": "v3"
 		}
 	],
 	"durable_objects": {
