@@ -38,6 +38,7 @@ export class MyMCP extends McpAgent {
 
 		// Validate required environment variables
 		if (!CMP_API_KEY || !CMP_API_SECRET) {
+			console.error("❌ Missing CMP API credentials");
 			throw new Error(
 				"Missing required environment variables: CMP_API_KEY and CMP_API_SECRET must be set in Cloudflare Workers.",
 			);
@@ -45,6 +46,8 @@ export class MyMCP extends McpAgent {
 
 		console.log("✅ Environment variables loaded successfully");
 		console.log("🔗 CMP Endpoint:", CMP_API_ENDPOINT);
+		console.log("🔑 API Key configured:", CMP_API_KEY ? "✓" : "✗");
+		console.log("🔐 API Secret configured:", CMP_API_SECRET ? "✓" : "✗");
 
 		// Initialize CMP client with environment variables
 		this.cmpClient = new CMPClient(
@@ -52,6 +55,8 @@ export class MyMCP extends McpAgent {
 			CMP_API_SECRET,
 			CMP_API_ENDPOINT,
 		);
+
+		console.log("📡 CMP Client initialized successfully");
 
 		// Query SIM list tool
 		this.server.tool(

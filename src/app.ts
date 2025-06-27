@@ -1,4 +1,5 @@
 import { Hono } from "hono";
+import { cors } from "hono/cors";
 import {
 	layout,
 	homeContent,
@@ -17,6 +18,42 @@ export type Bindings = Env & {
 const app = new Hono<{
 	Bindings: Bindings;
 }>();
+
+// Add CORS middleware for WebSocket and API requests
+app.use('*', cors({
+	origin: ['https://claude.ai', 'https://*.claude.ai', '*'],
+	allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+	allowHeaders: [
+		'Content-Type', 
+		'Authorization', 
+		'X-Requested-With',
+		'Accept',
+		'Origin',
+		'mcp-session-id',
+		'Upgrade',
+		'Connection',
+		'Sec-WebSocket-Key',
+		'Sec-WebSocket-Version',
+		'Sec-WebSocket-Protocol'
+	],
+	exposeHeaders: ['mcp-session-id'],
+	credentials: true,
+	maxAge: 86400
+}));
+
+// Handle OPTIONS requests specifically for WebSocket upgrade
+app.options('*', (c) => {
+	return new Response(null, {
+		status: 204,
+		headers: {
+			'Access-Control-Allow-Origin': '*',
+			'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+			'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With, Accept, Origin, mcp-session-id, Upgrade, Connection, Sec-WebSocket-Key, Sec-WebSocket-Version, Sec-WebSocket-Protocol',
+			'Access-Control-Max-Age': '86400',
+			'Access-Control-Allow-Credentials': 'true'
+		}
+	});
+});
 
 // Render a basic homepage placeholder to make sure the app is up
 app.get("/", async (c) => {
